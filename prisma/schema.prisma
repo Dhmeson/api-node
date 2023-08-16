@@ -1,0 +1,31 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+  // output   = "./generated/prisma-client"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db" // Caminho para o arquivo SQLite local
+}
+
+model Address {
+  id         Int    @id @default(autoincrement())
+  street     String
+  city       String
+  state      String
+  postalCode String
+
+  User User[]
+}
+
+model User {
+  id      Int      @id @default(autoincrement())
+  email   String   @unique
+  name    String
+  uid     String
+  address Address? @relation(fields: [addressId], references: [id], onDelete: Cascade)
+
+  addressId Int?
+}
