@@ -1,6 +1,5 @@
-# Use a imagem base do Node.js
-FROM node:16
-
+# Use a imagem base do Node.js FROM node:20-slim
+FROM node:20-slim
 # Diretório de trabalho dentro do container
 WORKDIR /app
 

@@ -1,24 +1,24 @@
 import { Request, Response } from 'express';
 import { ZodParseError } from '../utils/ZodParseError';
-import { userInputSchema, userUpdateInputSchema } from '../types/user';
-import { UserServices } from '../service/UserServices';
-import { ERROR_MESSAGE_DATABASE } from '../types/errors';
+import { ERROR_MESSAGE_DB_ADDRESS } from '../types/errors';
 import { Controller } from '../interfaces/Controller';
+import { AddressServices } from '../service/AddressServices';
+import { addressSchema, addressUpdateSchema } from '../types/address';
 import { validInpuId } from '../types/utils';
-const userService = new UserServices();
-export class UserController implements Controller {
+const addressServices = new AddressServices();
+export class AddreessController implements Controller {
   async find(req: Request, res: Response) {
-    const users = await userService.find();
-    res.send(users);
+    const address = await addressServices.find();
+    res.send(address);
   }
   async create(req: Request, res: Response) {
     try {
-      const user = userInputSchema.parse(req.body);
-      userService
-        .create(user)
-        .then(() => res.send(user))
+      const address = addressSchema.parse(req.body);
+      addressServices
+        .create(address)
+        .then(() => res.send(address))
         .catch(() => {
-          res.status(500).send({ error: ERROR_MESSAGE_DATABASE });
+          res.status(500).send({ error: ERROR_MESSAGE_DB_ADDRESS });
         });
     } catch (error) {
       ZodParseError(error, res);
@@ -27,12 +27,12 @@ export class UserController implements Controller {
   update(req: Request, res: Response) {
     try {
       const id = validInpuId.parse(Number(req.params.id));
-      const data = userUpdateInputSchema.parse(req.body);
-      userService
+      const data = addressUpdateSchema.parse(req.body);
+      addressServices
         .update(id, data)
         .then((response) => res.status(200).send(response))
         .catch(() => {
-          res.status(500).send(ERROR_MESSAGE_DATABASE);
+          res.status(500).send(ERROR_MESSAGE_DB_ADDRESS);
         });
     } catch (error) {
       ZodParseError(error, res);
@@ -41,10 +41,10 @@ export class UserController implements Controller {
   delete(req: Request, res: Response) {
     try {
       const id = validInpuId.parse(Number(req.params.id));
-      userService
+      addressServices
         .delete(id)
         .then(() => res.status(200).send('ok'))
-        .catch(() => res.status(500).send({ error: ERROR_MESSAGE_DATABASE }));
+        .catch(() => res.status(500).send({ error: ERROR_MESSAGE_DB_ADDRESS }));
     } catch (error) {
       ZodParseError(error, res);
     }
@@ -54,10 +54,10 @@ export class UserController implements Controller {
     try {
       const id = validInpuId.parse(Number(req.params.id));
 
-      userService
+      addressServices
         .findById(id)
-        .then((user) => res.status(200).send(user))
-        .catch(() => res.status(500).send(ERROR_MESSAGE_DATABASE));
+        .then((address) => res.status(200).send(address))
+        .catch(() => res.status(500).send(ERROR_MESSAGE_DB_ADDRESS));
     } catch (error) {
       ZodParseError(error, res);
     }
