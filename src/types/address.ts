@@ -43,8 +43,9 @@ export const addressUpdateSchema = z.object({
   state: z.string().optional(),
   street: z.string().optional(),
 });
-
 const addressOutputSchema = addressSchema.extend({ id: z.number() });
 export type AddressInput = z.infer<typeof addressSchema>;
 export type AddressOutput = z.infer<typeof addressOutputSchema>;
+export type AddressInterface = z.infer<typeof addressSchema>;
+
 export type AddressUpdateInput = z.infer<typeof addressUpdateSchema>;

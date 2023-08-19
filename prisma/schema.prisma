@@ -17,15 +17,16 @@ model Address {
   state      String
   postalCode String
 
-  User User[]
+  User User?
 }
 
 model User {
-  id      Int      @id @default(autoincrement())
-  email   String   @unique
-  name    String
-  uid     String
-  address Address? @relation(fields: [addressId], references: [id], onDelete: Cascade)
-
-  addressId Int?
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String
+  uid       String
+  address   Address? @relation(fields: [addressId], references: [id], onDelete: Cascade)
+  // address Address? @relation(fields: [addressId], references: [id], onDelete: Cascade)
+  // addressId Int?
+  addressId Int?     @unique
 }

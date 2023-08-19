@@ -8,8 +8,9 @@ const SELECT_OUTPUT_PRISMA = {
   email: true,
   name: true,
   id: true,
-  uid: true,
+  //uid: true,
   address: true,
+  // addresId: true,
 };
 export class UserServices implements DatabaseQuery {
   prisma = new PrismaClient();
@@ -69,14 +70,7 @@ export class UserServices implements DatabaseQuery {
         address: true,
       },
     });
-    //substituir pelo service do address
-    await this.prisma.address.deleteMany({
-      where: {
-        User: {
-          every: { id },
-        },
-      },
-    });
+
     if (!response) throw new Error(ERROR_MESSAGE_DATABASE);
     return true;
   }
@@ -96,6 +90,7 @@ export class UserServices implements DatabaseQuery {
         where: {
           id,
         },
+
         select: SELECT_OUTPUT_PRISMA,
       });
     } catch (error) {

@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 const userBaseSchema = z.object({
-  id: z.number(),
+  // id: z.number(),
   name: z.string(),
   uid: z.string(),
   email: z.string().email(),
@@ -12,11 +12,12 @@ const userBaseSchema = z.object({
       state: z.string(),
       postalCode: z.string(),
     })
+    .optional()
     .nullable()
-    .optional(),
+    .default(null),
 });
+export const userOutputSchema = userBaseSchema.omit({ uid: true });
 export const userInputSchema = userBaseSchema;
-export const userOutputSchema = userBaseSchema;
 const userUpdateOutputSchema = userBaseSchema;
 
 export const userUpdateInputSchema = z.object({
@@ -33,6 +34,8 @@ export const userUpdateInputSchema = z.object({
     .nullable()
     .optional(),
 });
+//const userInputSchema = userBaseSchema.extend({ id: z.number() });
+
 export const emailValidator = z.string().email();
 export type CreateUserInput = z.infer<typeof userInputSchema>;
 export type UserOutput = z.infer<typeof userOutputSchema>;

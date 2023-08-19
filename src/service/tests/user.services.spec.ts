@@ -22,9 +22,8 @@ const userService = new UserServices();
 
 describe('Testar a services do User', () => {
   it('deve salvar um no User', async () => {
-    const { address, email, id, name, uid } = INPUT_USER;
+    const { address, email, name, uid } = INPUT_USER;
     const createdUser = await userService.create({
-      id,
       name,
       email,
       uid,
