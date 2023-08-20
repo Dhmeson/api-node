@@ -1,22 +1,46 @@
 import { Request, Response } from 'express';
 import { ZodParseError } from '../utils/ZodParseError';
-import { userInputSchema, userUpdateInputSchema } from '../types/user';
+import {
+  CreateUser,
+  userInputSchema,
+  userUpdateInputSchema,
+} from '../types/user';
 import { UserServices } from '../service/UserServices';
 import { ERROR_MESSAGE_DATABASE } from '../types/errors';
 import { Controller } from '../interfaces/Controller';
 import { validInpuId } from '../types/utils';
+import { User } from '../entity/User';
+import { AddressInterface, addressSchema } from '../types/address';
+import { CepPromise } from '../service/CepPromise';
 const userService = new UserServices();
 export class UserController implements Controller {
+  cep = new CepPromise();
+
   async find(req: Request, res: Response) {
     const users = await userService.find();
     res.send(users);
   }
   async create(req: Request, res: Response) {
     try {
-      const user = userInputSchema.parse(req.body);
+      const body = userInputSchema.parse(req.body);
+      const { email, name, uid, cepCode } = body;
+      const user = new User({ email, name, uid, address: null });
+      let address: AddressInterface | null = null;
+
+      if (cepCode) {
+        const result = await this.cep.find(cepCode ?? '');
+        address = addressSchema.parse(result);
+      }
+      const data: CreateUser = {
+        address,
+        email,
+        name,
+        uid,
+      };
+
       userService
-        .create(user)
-        .then(() => res.send(user))
+        .create(data)
+        .then(() => res.send(data))
         .catch(() => {
           res.status(500).send({ error: ERROR_MESSAGE_DATABASE });
         });

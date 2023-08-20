@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { User } from '../entity/User';
 import { DatabaseQuery } from '../interfaces/DatabaseQuery';
 import { ERROR_MESSAGE_DATABASE } from '../types/errors';
-import { CreateUserInput, UserOutput, UserUpdateInput } from '../types/user';
+import { CreateUser, UserOutput, UserUpdateInput } from '../types/user';
 import { UpdateUser } from '../useCase/UpdateUser';
 const SELECT_OUTPUT_PRISMA = {
   email: true,
@@ -12,21 +12,25 @@ const SELECT_OUTPUT_PRISMA = {
   address: true,
   // addresId: true,
 };
+
 export class UserServices implements DatabaseQuery {
   prisma = new PrismaClient();
-  async create(data: CreateUserInput) {
+
+  async create(data: CreateUser) {
+    const { address, email, name, uid } = data;
+
     try {
       return await this.prisma.user.create({
         data: {
-          email: data.email,
-          name: data.name,
-          uid: data.uid,
+          email,
+          name,
+          uid,
           address: {
             create: {
-              street: data.address?.street ?? '',
-              city: data.address?.city ?? '',
-              state: data.address?.state ?? '',
-              postalCode: data.address?.postalCode ?? '',
+              street: address ? address.street : '',
+              city: address ? address.city : '',
+              state: address ? address.state : '',
+              postalCode: address ? address.postalCode : '',
             },
           },
         },
@@ -42,7 +46,7 @@ export class UserServices implements DatabaseQuery {
           id,
         },
       });
-      const user = new User(name, email, uid, id, null);
+      const user = new User({ name, email, uid, id, address: null });
       UpdateUser(user, data);
 
       return await this.prisma.user.update({
@@ -52,7 +56,7 @@ export class UserServices implements DatabaseQuery {
         data: {
           email: user.getEmail(),
           name: user.getName(),
-          uid: user.getuid(),
+          uid: user.getUid(),
           //address:{ connect: { id: data.addressId } }
         },
         select: SELECT_OUTPUT_PRISMA,
@@ -62,6 +66,13 @@ export class UserServices implements DatabaseQuery {
     }
   }
   async delete(id: number): Promise<boolean> {
+    await this.prisma.address.deleteMany({
+      where: {
+        User: {
+          id: id,
+        },
+      },
+    });
     const response = await this.prisma.user.delete({
       where: {
         id,

@@ -1,6 +1,8 @@
 import { States } from '../../types/address';
 import { Address } from '../../entity/Address';
 import { UserServices } from '../UserServices';
+import { User } from '../../entity/User';
+import { CreateUser } from '../../types/user';
 interface user {
   id: number;
   email: string;
@@ -8,7 +10,13 @@ interface user {
   uid: string;
   addressId: number | null;
 }
-const address = new Address('rua', 'Poa', States.RS, '91140-504');
+const INPUT_ADDRESS = {
+  state: 'Rio Grande do Sul',
+  city: 'POA',
+  postalCode: '91140-504',
+  street: 'rua',
+};
+const address = new Address(INPUT_ADDRESS);
 let USER_: user = {} as user;
 const n = Math.random() * 100;
 const INPUT_USER = {
@@ -16,19 +24,16 @@ const INPUT_USER = {
   name: 'test',
   uid: '123456',
   id: 1,
-  address,
+  address: null,
 };
 const userService = new UserServices();
 
 describe('Testar a services do User', () => {
-  it('deve salvar um no User', async () => {
-    const { address, email, name, uid } = INPUT_USER;
-    const createdUser = await userService.create({
-      name,
-      email,
-      uid,
-      address,
-    });
+  it('deve salvar um  User', async () => {
+    const { email, name, uid, address } = INPUT_USER;
+    const user: CreateUser = { address, email, name, uid };
+
+    const createdUser = await userService.create(user);
     expect(createdUser.name).toEqual(name);
     expect(createdUser.email).toEqual(email);
     expect(createdUser.uid).toEqual(uid);
@@ -45,6 +50,7 @@ describe('Testar a services do User', () => {
     expect(updatedUser.name).toEqual(newName);
   });
   it('deletar user', async () => {
+    console.log(USER_.id);
     const resultQuery = await userService.delete(USER_.id);
     expect(resultQuery).toBeTruthy();
   });

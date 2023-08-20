@@ -1,13 +1,19 @@
-import { States, postalCodeValidator } from '../types/address';
+import { postalCodeValidator } from '../types/address';
 import { ERROR_ADDRESS_FORMAT } from '../types/errors';
 
+type AddressProps = {
+  street: string;
+  city: string;
+  state: string;
+  postalCode: string;
+};
 export class Address {
-  constructor(
-    public street: string,
-    public city: string,
-    public state: States,
-    public postalCode: string
-  ) {
+  public street: string;
+  public city: string;
+  public state: string;
+  public postalCode: string;
+  constructor(data: AddressProps) {
+    const { city, postalCode, state, street } = data;
     this.isValidPostalCode(postalCode);
     this.state = state;
     this.city = city;

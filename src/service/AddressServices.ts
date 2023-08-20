@@ -1,14 +1,11 @@
 import { PrismaClient } from '@prisma/client';
 import { DatabaseQuery } from '../interfaces/DatabaseQuery';
-import {
-  AddressInput,
-  AddressOutput,
-  AddressUpdateInput,
-} from '../types/address';
+import { AddressOutput, AddressUpdateInput } from '../types/address';
+import { Address } from '../entity/Address';
 
 export class AddressServices implements DatabaseQuery {
   prisma = new PrismaClient();
-  async create(data: AddressInput): Promise<AddressOutput> {
+  async create(data: Address): Promise<AddressOutput> {
     return this.prisma.address.create({
       data,
     });

@@ -11,28 +11,19 @@ const INPUT_USER = {
 };
 describe('Testar a entidade User', () => {
   it('deve criar um usuario', () => {
-    const user = new User(
-      INPUT_USER.name,
-      INPUT_USER.email,
-      INPUT_USER.uid,
-      INPUT_USER.id,
-      INPUT_USER.address
-    );
+    const user = new User(INPUT_USER);
 
     expect(user.getEmail()).toEqual(INPUT_USER.email);
     expect(user.getName()).toEqual(INPUT_USER.name);
-    expect(user.getuid()).toEqual(INPUT_USER.uid);
+    expect(user.getUid()).toEqual(INPUT_USER.uid);
     expect(user.getId()).toEqual(INPUT_USER.id);
   });
   it('deve ocorrer um erro ao criar o usuario com email invalido', () => {
     const createInvalidUser = () => {
-      return new User(
-        INPUT_USER.name,
-        'dh',
-        INPUT_USER.uid,
-        INPUT_USER.id,
-        null
-      );
+      return new User({
+        ...INPUT_USER,
+        email: 'dh',
+      });
     };
     expect(createInvalidUser).toThrowError(ERROR_EMAIL_FORMAT);
   });

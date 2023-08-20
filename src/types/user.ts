@@ -17,8 +17,9 @@ const userBaseSchema = z.object({
     .default(null),
 });
 export const userOutputSchema = userBaseSchema.omit({ uid: true });
-export const userInputSchema = userBaseSchema;
-const userUpdateOutputSchema = userBaseSchema;
+export const userInputSchema = userBaseSchema.extend({
+  cepCode: z.string().optional(),
+});
 
 export const userUpdateInputSchema = z.object({
   name: z.string(),
@@ -38,6 +39,8 @@ export const userUpdateInputSchema = z.object({
 
 export const emailValidator = z.string().email();
 export type CreateUserInput = z.infer<typeof userInputSchema>;
+export type CreateUser = z.infer<typeof userBaseSchema>;
+
 export type UserOutput = z.infer<typeof userOutputSchema>;
 export type UserUpdateInput = z.infer<typeof userUpdateInputSchema>;
-export type UserUpdateOuput = z.infer<typeof userUpdateOutputSchema>;
+export type UserUpdateOuput = z.infer<typeof userBaseSchema>;
