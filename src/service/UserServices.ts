@@ -3,7 +3,6 @@ import { User } from '../entity/User';
 import { DatabaseQuery } from '../interfaces/DatabaseQuery';
 import { ERROR_MESSAGE_DATABASE } from '../types/errors';
 import { CreateUser, UserOutput, UserUpdateInput } from '../types/user';
-import { UpdateUser } from '../useCase/UpdateUser';
 const SELECT_OUTPUT_PRISMA = {
   email: true,
   name: true,
@@ -47,7 +46,7 @@ export class UserServices implements DatabaseQuery {
         },
       });
       const user = new User({ name, email, uid, id, address: null });
-      UpdateUser(user, data);
+      user.update(data);
 
       return await this.prisma.user.update({
         where: {

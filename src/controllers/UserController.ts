@@ -9,7 +9,6 @@ import { UserServices } from '../service/UserServices';
 import { ERROR_MESSAGE_DATABASE } from '../types/errors';
 import { Controller } from '../interfaces/Controller';
 import { validInpuId } from '../types/utils';
-import { User } from '../entity/User';
 import { AddressInterface, addressSchema } from '../types/address';
 import { CepPromise } from '../service/CepPromise';
 const userService = new UserServices();
@@ -24,7 +23,6 @@ export class UserController implements Controller {
     try {
       const body = userInputSchema.parse(req.body);
       const { email, name, uid, cepCode } = body;
-      const user = new User({ email, name, uid, address: null });
       let address: AddressInterface | null = null;
 
       if (cepCode) {

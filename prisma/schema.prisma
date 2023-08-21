@@ -28,4 +28,28 @@ model User {
   address   Address? @relation(fields: [addressId], references: [id], onDelete: SetNull)
   //onDelete: Cascade)
   addressId Int?     @unique
+  pets      Pet[]
+}
+
+model Pet {
+  id        Int        @id @default(autoincrement())
+  name      String
+  specie    String?    @default("")
+  age       Int
+  birthDate DateTime
+  weight    Float // Campo opcional para o peso do animal
+  height    Float // Campo opcional para a altura do animal
+  allergies String // string[] somente no postrgess
+  vaccines  Vaccines[] // string[] somente no postrgess
+  owner     User       @relation(fields: [ownerId], references: [id])
+  ownerId   Int
+}
+
+model Vaccines {
+  id               Int       @id @default(autoincrement())
+  name             String
+  durationMonths   Int // Duração da vacina em meses
+  dateAdministered DateTime? // Data em que a vacina foi tomada
+  Pet              Pet       @relation(fields: [petId], references: [id])
+  petId            Int
 }
