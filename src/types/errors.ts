@@ -21,6 +21,8 @@ export const ERROR_EMAIL_FORMAT = 'invalid format email';
 export const ERROR_ADDRESS_FORMAT = 'invalid format address';
 export const ERROR_STATE_FORMAT = 'invalid format state';
 export const ERROR_MESSAGE_DB_ADDRESS = 'internal error in address database';
+//pet
+export const ERROR_PET_DATABASE = 'internal error in pets database ';
 
 const postalCodeErrorSchema = z.object({
   message: z.string(),

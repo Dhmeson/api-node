@@ -39,8 +39,8 @@ model Pet {
   birthDate DateTime
   weight    Float // Campo opcional para o peso do animal
   height    Float // Campo opcional para a altura do animal
-  allergies String // string[] somente no postrgess
-  vaccines  Vaccines[] // string[] somente no postrgess
+  allergies String? // string[] somente no postrgess
+  vaccines  Vaccines[] // string[] somente no postrgess 
   owner     User       @relation(fields: [ownerId], references: [id])
   ownerId   Int
 }
